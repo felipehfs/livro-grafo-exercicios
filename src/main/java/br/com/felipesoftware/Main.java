@@ -48,5 +48,54 @@ public class Main {
             }
             System.out.println();
         }
+
+        Graph graph = new Graph();
+        graph.addVertex("A");
+        graph.addVertex("B");
+        graph.addVertex("C");
+        graph.addVertex("D");
+        graph.addVertex("E");
+
+        graph.connectVertices("A", "B", 12);
+        graph.connectVertices("C", "E", 10);
+        graph.connectVertices("B", "D", 5);
+        graph.connectVertices("D", "A", 2);
+        graph.connectVertices("B", "E", 1);
+        graph.connectVertices("A", "C", 7);
+
+        System.out.println("Grafo ponderado");
+        int weight = graph.getWeight("A", "C");
+        System.out.println("Peso da aresta AC: " + weight);
+        weight = graph.getWeight("B", "E");
+        System.out.println("Peso da aresta BE: " + weight);
+
+
+        Digraph complexDigraph = new Digraph();
+        complexDigraph.addVertex("X");
+        complexDigraph.addVertex("Y");
+        complexDigraph.addVertex("Z");
+        complexDigraph.addVertex("W");
+        complexDigraph.addVertex("V");
+
+        complexDigraph.connectVertices("X", "V", 44);
+        complexDigraph.connectVertices("Y", "W", 37);
+        complexDigraph.connectVertices("W", "Z", 38);
+        complexDigraph.connectVertices("X", "V", 16);
+        complexDigraph.connectVertices("V", "X", 22);
+        complexDigraph.connectVertices("V", "Y", 57);
+
+        System.out.println("Dígrafo Ponderado");
+        System.out.println("Vértices: ");
+        for (Vertex v : complexDigraph.getVertices()) {
+            System.out.println("\t" + v.getLabel());
+        }
+
+        System.out.println();
+        System.out.println("Arestas:");
+        for(Vertex v : complexDigraph.getVertices()) {
+            for(Vertex adj : complexDigraph.getAdjacents(v.getLabel())) {
+                System.out.println("\t" + v.getLabel() + adj.getLabel() + ":" + complexDigraph.getWeight(v.getLabel(), adj.getLabel()));
+            }
+        }
     }
 }

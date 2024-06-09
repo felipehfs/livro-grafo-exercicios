@@ -118,8 +118,8 @@ public class AdjacentMatrix {
     public List<Vertex> getAdjacents(int indexVertex) {
         int row = indexVertex;
         List<Vertex> adjacents = new ArrayList<>();
-        for(int j = 0; j < vertices.size(); j++) {
-            if (matriz[row][j] == 1) {
+        for(int j = 0; j < qtdVertices; j++) {
+            if (matriz[row][j] != 0) {
                 Vertex vertex = vertices.get(j);
                 adjacents.add(vertex);
             }
