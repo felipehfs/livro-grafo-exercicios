@@ -43,14 +43,14 @@ public class Graph {
         return this.vertices.get(index);
     }
 
-    public void connectVertices(String initialVertexLabel, String finalVertexLabel) throws Exception {
+    public void connectVertices(String initialVertexLabel, String finalVertexLabel, Integer weight) throws Exception {
         if (!this.existsVertice(initialVertexLabel) || !this.existsVertice(finalVertexLabel)) {
             throw new Exception("Para adicionar uma aresta ambos os vértices devem existir");
         }
         createAdjacentMatrix();
         int finalVertexIndex = this.labelsIndexes.get(initialVertexLabel);
         int initialVertexIndex = this.labelsIndexes.get(finalVertexLabel);
-        this.adjacentMatrix.addEdge(initialVertexIndex ,finalVertexIndex);
+        this.adjacentMatrix.addEdge(initialVertexIndex ,finalVertexIndex, weight);
     }
 
     public List<Vertex> getAdjacents(String vertex) {
@@ -83,11 +83,17 @@ public class Graph {
                 String label = nextVertex.getLabel();
                 visitedVertices.add(label);
                 stack.push(nextVertex);
-                tree.connectVertices(vertexAnalysed.getLabel(), nextVertex.getLabel());
+                tree.connectVertices(vertexAnalysed.getLabel(), nextVertex.getLabel(), null);
             }
         }
 
         return tree;
+    }
+
+    public int getWeight(String initialVertexLabel, String finalVerticeLabel) {
+        int initialVertexIndex = labelsIndexes.get(initialVertexLabel);
+        int finalVertexIndex = labelsIndexes.get(finalVerticeLabel);
+        return adjacentMatrix.getWeight(initialVertexIndex, finalVertexIndex);
     }
 
     private Vertex getNextVertex(Vertex vertex, LinkedHashSet<String> visitedVertices) {
@@ -102,18 +108,32 @@ public class Graph {
         return null;
     }
 
-    private void createAdjacentMatrix() {
+    void createAdjacentMatrix() throws Exception{
         if (this.adjacentMatrix == null) {
             this.adjacentMatrix = new AdjacentMatrix(new ArrayList<>(this.vertices));
+        } else {
+            int qtdVertexMatrix = this.adjacentMatrix.getQtdVertices();
+            if (this.vertices.size() != qtdVertexMatrix) {
+                AdjacentMatrix adjacentMatrixTemp = new AdjacentMatrix(this.vertices);
+                this.adjacentMatrix.copyValuesTo(adjacentMatrixTemp);
+                this.adjacentMatrix = adjacentMatrixTemp;
+            }
         }
     }
 
-    private boolean existsVertice(String label) {
-        int index = this.labelsIndexes.get(label);
-        return this.vertices.get(index) != null;
+    public Map<String, Integer> getLabelsIndexes() {
+        return labelsIndexes;
     }
 
-    private boolean existsVertexOrThrow(String label) {
+    public AdjacentMatrix getAdjacentMatrix() {
+        return adjacentMatrix;
+    }
+
+    public boolean existsVertice(String label) {
+        return this.labelsIndexes.get(label) != null;
+    }
+
+    public boolean existsVertexOrThrow(String label) {
         if (!existsVertice(label)) {
             throw new IllegalArgumentException("O vértice não existe");
         }
