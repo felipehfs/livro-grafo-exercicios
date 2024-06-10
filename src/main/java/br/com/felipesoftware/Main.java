@@ -3,8 +3,12 @@ package br.com.felipesoftware;
 import br.com.felipesoftware.graph.core.Digraph;
 import br.com.felipesoftware.graph.core.Graph;
 import br.com.felipesoftware.graph.core.Vertex;
+import br.com.felipesoftware.graph.util.DjakstraAlgorithm;
+import br.com.felipesoftware.graph.util.FloydWarshallAlgorithm;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class Main {
     public static void main(String[] args) throws Exception{
@@ -95,6 +99,24 @@ public class Main {
         for(Vertex v : complexDigraph.getVertices()) {
             for(Vertex adj : complexDigraph.getAdjacents(v.getLabel())) {
                 System.out.println("\t" + v.getLabel() + adj.getLabel() + ":" + complexDigraph.getWeight(v.getLabel(), adj.getLabel()));
+            }
+        }
+
+        Map<String, DjakstraAlgorithm.Info> minorsPath = DjakstraAlgorithm.getInstance().process("A", "C", graph);
+        Set<String> keys = minorsPath.keySet();
+        for (String key: keys) {
+            DjakstraAlgorithm.Info info = minorsPath.get(key);
+            String predecessor = info.previous == null ? "": info.previous.getLabel();;
+            System.out.println(key + ":" + info.distance + "-" + predecessor);
+        }
+
+        Map<String, Map<String, FloydWarshallAlgorithm.Info>> matrix = FloydWarshallAlgorithm.getInstance().process(digraph);
+        for (String v : matrix.keySet()) {
+            System.out.println("Vértice " + v);
+            Map<String, FloydWarshallAlgorithm.Info> row = matrix.get(v);
+            for (String u : row.keySet()) {
+                FloydWarshallAlgorithm.Info info = row.get(u);
+                System.out.println(u + " com distância " + info.distance + " por " + info.byWhatVertex.getLabel());
             }
         }
     }
